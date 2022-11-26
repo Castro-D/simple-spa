@@ -2,6 +2,19 @@ import HomeCard from "../../components/HomeCard";
 import SearchBar from "../../components/SearchBar";
 import React, { useState } from 'react';
 import jikan from "../../service/jikan";
+import styled from 'styled-components'
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
+
+const CardsWrapper = styled.div`
+  width:70%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+`
 
 const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -9,19 +22,21 @@ const HomePage = () => {
   
   const handleSubmit = async (term) => {
     const data = await jikan.searchAnime(term)
-    console.log(data);
     setResult(data)  
   }
 
   return (
-    <div>
+    <Wrapper>
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleSubmit={handleSubmit} />
-      {result && (
-        result.data.map((a) => (
-          <HomeCard key={a.mal_id} title={a.title} img={a.images.jpg.image_url} />
-        ))
-      )}
-    </div>
+      <CardsWrapper>
+        {result && (
+          result.data.map((a) => (
+            <HomeCard key={a.mal_id} title={a.title} img={a.images.jpg.image_url} />
+          ))
+        )}
+      </CardsWrapper>
+      
+    </Wrapper>
     
   )
 }
