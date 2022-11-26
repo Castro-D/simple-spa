@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import jikan from "./service/jikan";
+import SearchBar from "./components/SearchBar";
 
 const Anime = (props) => {
   return (
     <div>
       <p>{props.title}</p>
       <p>{props.duration}</p>
+      <img src={props.img} alt=""/>
     </div>
   )
 }
@@ -16,18 +18,17 @@ function App() {
   
   const handleSubmit = async (term) => {
     const data = await jikan.searchAnime(term)
+    console.log(data);
     setResult(data)
+    
   }
   
   return (
     <div className="App">
-      <h1>MyAnime app</h1>
-      <h2>Search for an anime</h2>
-      <input onChange={(e) => setSearchTerm(e.target.value)} value={searchTerm} placeholder="Naruto.." />
-      <button onClick={() => handleSubmit(searchTerm)}>Go</button>
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleSubmit={handleSubmit} />
       {result && (
         result.data.map((a) => (
-          <Anime key={a.mal_id} title={a.title} duration={a.duration} />
+          <Anime key={a.mal_id} title={a.title} duration={a.duration} img={a.images.jpg.image_url} />
         ))
       )}
     </div>
