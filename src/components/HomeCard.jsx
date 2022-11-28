@@ -24,5 +24,3 @@ const HomeCard = (props) => {
 }
 
 export default HomeCard; 
-
-// agregar estilos a cada card

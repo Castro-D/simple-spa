@@ -1,9 +1,10 @@
 import HomeCard from "../../components/HomeCard";
 import SearchBar from "../../components/SearchBar";
-import React, { useState } from 'react';
-import jikan from "../../service/jikan";
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Loading from "../../components/Loading";
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchCards, cardsSelector } from '../../store/fetch/fetch.slice'
 
 const Wrapper = styled.div`
   display: flex;
@@ -21,19 +22,20 @@ const CardsWrapper = styled.div`
 
 const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [result, setResult] = useState('');
+  const dispatch = useDispatch();
+  const { cards, loading, hasErrors } = useSelector(cardsSelector);
   
+  console.log('initial state is', loading);
   const handleSubmit = async (term) => {
-    const data = await jikan.searchAnime(term)
-    setResult(data)  
+    dispatch(fetchCards(term))
   }
-
   return (
     <Wrapper>
       <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} handleSubmit={handleSubmit} />
+      {loading && <Loading />}
       <CardsWrapper>
-        {result && (
-          result.data.map((a) => (
+        {cards && (
+          cards.map((a) => (
             <HomeCard key={a.mal_id} title={a.title} img={a.images.jpg.image_url} />
           ))
         )}
